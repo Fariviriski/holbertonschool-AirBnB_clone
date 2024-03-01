@@ -9,7 +9,7 @@ from models.place import Place
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-from models import storage
+from models.engine import file_storage
 
 class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
@@ -19,7 +19,8 @@ class HBNBCommand(cmd.Cmd):
         return True
     def do_EQF(self, arg):
         """EQF to end prog"""
-        return True
+        if cmd is None:
+            return True
     def emptyline(self):
         """empty line + enter does nothin"""
         pass
@@ -121,11 +122,11 @@ class HBNBCommand(cmd.Cmd):
         key - f"{args[0]}.{args[1]}"
 
         if key not in objects:
-            print(** not instance found **)
+            print("** not instance found **")
             return
         if args[2] not in ['id', 'created_at', 'updated_at']:
             setattr(objects[key], args[2], args[3].strip("\""))
             objects[key].save()
 
 if __name__ == '__main__':
-    HBNBcommand().cmdloop()
+    HBNBCommand().cmdloop()

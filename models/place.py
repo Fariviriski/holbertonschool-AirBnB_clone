@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """defines a place class"""
 
-from models.base import BaseModel
+from models.base_model import BaseModel
 
-classs Place(BaseModel):
+class Place(BaseModel):
     """ Inherits from BaseModel represents a place"""
     city_id = ""
     user_id = ""

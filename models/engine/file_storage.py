@@ -5,14 +5,6 @@ definition and methods
 """
 from models.base_model import BaseModel
 import json
-import os
-import models
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
-from models.user import User
-from models.amenity import Amenity
 
 
 class FileStorage:
@@ -34,25 +26,24 @@ class FileStorage:
         """
         Sets in `__objects` the `obj` with key `<obj class name>.id`.
         """
-        self.__objects[f'{obj.__class__.__name__}.{obj.id}'] = obj
+        key = type(obj).__name__ + '.' + str(obj.id)
+        self.__objects[key] = obj
 
     def save(self):
         """
         Serializes `__objects` to the JSON file.
         """
-        ObjectDict = {}
-        for key, value in self.__objects.items():
-            ObjectDict[key] = value.to_dict()
-        with open(self.__file_path, 'w', encoding='utf=8') as f:
-            f.write(json.dumps(ObjectDict))
+        with open(self.__file_path, 'w', enoding="utf-8") as f:
+            json.dump({k: v.to_dict() for k, v in self.__objects.items()}, f)
 
     def reload(self):
         """
         Deserializes the JSON file to `__objects` if the file exists;
         otherwise, does nothing.
         """
-        if os.path.exists(self.__file_path):
-            with open(self.__file_path, 'r', encoding='utf-8') as f:
-                LoadDict = json.loads(f.read())
-            for key, val in LoadDict.items():
-                self.__objects[key] = eval(val["__class__"])(**val)
+        try:
+            with open(self.__file_path, 'r', encoding="utf-8") as file:
+                self.__objects = {k: BaseModel(**v)
+                                  for k, v in json.load(file).items()}
+        except Exception:
+            pass

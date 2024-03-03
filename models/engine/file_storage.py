@@ -2,6 +2,13 @@
 """defines FileStorarge class to serialize instances to JSON File"""
 
 import json
+from models.place import Place
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 class FileStorarge:
     """serializes instances to a JSON"""
@@ -11,13 +18,6 @@ class FileStorarge:
 
     def classes(self):
         """returns a dict of supported chars"""
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.place import Place
-        from models.review import Review
 
         return {
             'BaseModel': BaseModel,
@@ -49,13 +49,6 @@ class FileStorarge:
 
     def reload(self):
         """deserializes JSON file to __objects """
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.place import Place
-        from models.review import Review
 
         try:
             with open(self.__file_path, encoding='utf-8') as tha_file:

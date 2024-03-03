@@ -8,7 +8,7 @@ class TestAmenity(unittest.TestCase):
 
     def test_amenity_instance(self):
         """tets if amenity is instance with correct attr"""
-        amenity Amenity()
+        amenity = Amenity()
         self.assertIsInstance(amenity, Amenity)
         self.assertTrue(hasattr(amenity, "name"))
         self.assertEqual(amenity.name, "")

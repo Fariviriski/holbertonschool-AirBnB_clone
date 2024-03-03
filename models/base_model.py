@@ -1,42 +1,51 @@
 #!/usr/bin/python3
-"""BaseModel class"""
-import models
-from uuid import uuid4
 from datetime import datetime
+import uuid
+import models
+
 
 class BaseModel:
-    """BaseModel for inheritance
-        id(str): id of instance
-        created_at(datetime): when created
-        updated_at(datetime): when update
+    """ defines all common attributes/methods for other classes
     """
     def __init__(self, *args, **kwargs):
-        """ initializes instance of BaseModel"""
+        """
+        Initializer for BaseModel class.
+        """
         if kwargs:
             for key, value in kwargs.items():
-                if key != '__class__':
-                    if key in ['created_at', 'updated_at']:
-                        value = datetime.fromisoformat(value)
+                if key != "__class__":
                     setattr(self, key, value)
+            s = '%Y-%m-%dT%H:%M:%S.%f'
+            self.created_at = datetime.strptime(self.created_at, s)
+            self.updated_at = datetime.strptime(self.updated_at, s)
         else:
-            self.id = str(uuid4())
+            self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.created_at
             models.storage.new(self)
 
     def __str__(self):
-        """string rep of instance"""
-        return f"[{self.__cleass__.__name__}] ({self.id}) {self.__dict__}"
+        """
+        Returns a string representation of a BaseModel
+        instance.
+        """
+        return f"[{type(self).__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
-        """ updates the updated_at attr"""
+        """
+        Updates the public instance attribute `updated_at`
+        with the current datetime.
+        """
         self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
-        """converts instance to dict for serials"""
-        obj_dict = self.__dict__.copy()
-        obj_dict['__class__'] = self.__class__.__name__
-        obj_dict['created_at'] = self.created_at.isoformat()
-        obj_dict['updated_at'] = self.updated_at.isoformat()
-        return obj_dict
+        """
+        Returns a dictionary containing all keys/values of
+        `__dict__` of the instance.
+        """
+        myDict = self.__dict__.copy()
+        myDict['__class__'] = self.__class__.__name__
+        myDict['created_at'] = self.created_at.isoformat()
+        myDict['updated_at'] = self.updated_at.isoformat()
+        return myDict

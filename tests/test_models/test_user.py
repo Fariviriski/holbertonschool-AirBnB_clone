@@ -1,44 +1,62 @@
 #!/usr/bin/python3
-
+"""
+test_user is a module used for unit testing of
+the User class.
+"""
 import unittest
 from models.user import User
-from datetime import datetime
 
 
-class TestUser(unittest.TestCase):
+class UserTests(unittest.TestCase):
+    """
+    Class UserTests provides unit testing for
+    the User class.
+    """
+    @classmethod
+    def setUp(cls):
+        """
+        Method to set up BaseModel classes for use during testing.
+        """
+        cls.user1 = User()
+        cls.user2 = User()
 
-    def test_user_instance(self):
-        """test user instance and correct attr"""
-        user = User()
-        self.assertIsInstance(user, User)
-        self.assertTrue(hasattr(user, "email"))
-        self.assertTrue(hasattr(user, "password"))
-        self.assertTrue(hasattr(user, "first_name"))
-        self.assertTrue(hasattr(user, "last_name"))
+    @classmethod
+    def tearDown(cls):
+        """
+        Method to tear down BaseModel classes for use during testing.
+        """
+        del cls.user1
+        del cls.user2
+        return super().tearDownClass()
 
-    def test_attribute_types(self):
-        """test attr types"""
-        user = User()
-        self.assertIsInstance(user.email, str)
-        self.assertIsInstance(user.password, str)
-        self.assertIsInstance(user.first_name, str)
-        self.assertIsInstance(user.last_name, str)
+    def test_class_attrs(self):
+        self.assertEqual(self.user1.email, "")
+        self.assertEqual(self.user1.password, "")
+        self.assertEqual(self.user1.first_name, "")
+        self.assertEqual(self.user1.last_name, "")
+        self.assertIsInstance(self.user1.email, str)
+        self.assertIsInstance(self.user1.password, str)
+        self.assertIsInstance(self.user1.first_name, str)
+        self.assertIsInstance(self.user1.last_name, str)
 
-    def test_save(self):
-        """test user save"""
-        user = User()
-        old_created_at = user.created_at
-        old_updated_at - user.updated_at
-        user.save()
-        self.assertNotEqual(old_updated_at, user.updated_at)
+    def test_instance_attrs(self):
+        test_dict = self.user2.to_dict()
+        self.user3 = User(test_dict)
+        self.user3.email = "test@fakemail.com"
+        self.user3.password = "1234"
+        self.user3.first_name = "Blatthew"
+        self.user3.last_name = "Blallen"
+        user_info = {
+            "email": "test@fakemail.com",
+            "password": "1234",
+            "first_name": "Blatthew",
+            "last_name": "Blallen"
+        }
+        # Non-depricated version of "assertDictContainsSubset"
+        test_set = {**self.user3.to_dict(), **user_info}
+        self.assertEqual(self.user3.to_dict(), test_set)
+        self.assertNotEqual(self.user2, self.user3)
 
-    def test_to_dict(self):
-        """test to_dict"""
-        user = User()
-        user_dict = user.to_dict()
-        self.assertIsInstance(user_dict, dict)
-        self.assertTrue('created_at' in user_dict)
-        self.assertTrue('updated_at' in user_dict)
 
-if __name__ == '__main__':
+if __name__ == '__name__':
     unittest.main()

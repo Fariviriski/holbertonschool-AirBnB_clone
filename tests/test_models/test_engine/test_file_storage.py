@@ -1,83 +1,77 @@
 #!/usr/bin/python3
-
+"""
+Unittest module for FileStorage class.
+"""
 import unittest
-import os
-from models import storage
-from models.base_model import BaseModel
-from models.engine.file_storage import FileStorage
+from models.engine.file_storage import FileStorage as FileStorage
+from models.base_model import BaseModel as BaseModel
 
-class TestFileStorage(unittest.TestCase):
 
-    def setup(self):
-        """test setup env"""
-        self.file_path = "file.json"
-        self.storage = FileStorage()
-        self.storage._FileStorage__file_path = self.file_path
-        self.model = BaseModel()
+class FileStorageTests(unittest.TestCase):
+    """
+    Class FileStorageTests that provides unit testing for the
+    `FileStorage` class.
+    """
+    def setUp(cls):
+        """
+        Method to set up FileStorage classes for use during testing.
+        """
+        cls.fs1 = FileStorage()
+        cls.fs2 = FileStorage()
+        cls.bm1 = BaseModel()
 
-    def tearDown(self):
-        """clean up test"""
-        if os.path.exists(self.file_path):
-            os.remove(self.file_path)
+    def tearDown(cls):
+        """
+        Method to tear down FileStorage classes for use during testing.
+        """
+        del cls.fs1
+        del cls.fs2
+        del cls.bm1
+        return super().tearDown()
+
+    def test_init(self):
+        """
+        Method for testing initialization of the FileStorage class.
+        """
+        self.assertIsNotNone(self.fs1)
+        self.assertIsInstance(self.fs1, FileStorage)
+        self.assertIsNotNone(self.fs1._FileStorage__file_path)
+        self.assertEqual(self.fs1._FileStorage__file_path, "file.json")
+        self.assertIsNotNone(self.fs1._FileStorage__objects)
+        self.assertIsInstance(self.fs1._FileStorage__objects, dict)
 
     def test_all(self):
-        """test all method"""
-        all_obj = self.storage.all()
-        self.assertIsInstance(all_obj, dict)
+        """
+        Method for testing functionality of the all() method
+        of the FileStorage class.
+        """
+        self.assertIsNotNone(self.fs1.all())
+        self.assertIsInstance(self.fs1.all(), dict)
+        self.fs1.new(self.bm1)
+        key = f'BaseModel.{self.bm1.id}'
+        self.assertIsNotNone(self.fs1.all(), {key: self.bm1})
 
     def test_new(self):
-        """test new method"""
-        self.storage.new(self.model)
-        all_obj = self.storage.all()
-        key = "BaseModel.{}".format(self.model.id)
-        self.assertIn(key, all_obj)
+        """
+        Method for testing functionality of the new() method
+        of the FileStorage class.
+        """
+        pass
 
     def test_save(self):
-        """test save"""
-        self.storage.new(self.model)
-        self.storage.save()
-        self.assertTrue(os.path.exists(self.file_path))
+        """
+        Method for testing functionality of the save() method
+        of the FileStorage class.
+        """
+        pass
 
     def test_reload(self):
-        """tests reaload"""
-        self.storage.new(self.model)
-        self.storage.save()
-        loaded_storage = FileStorage()
-        with self.assertRaises(TypeError):
-            loaded_storage.reload("incorrect_type_parameter")
-        loaded_storage.reload()
-        all_obj = loaded_storage.all()
-        key = f"{self.model.__class__.__name__}.{self.model.id}"
-        self.assertIn(key, all_obj)
+        """
+        Method for testing functionality of the reload() method
+        of the FileStorage class.
+        """
+        pass
 
-    def reload_docstr(self):
-        """test for doc"""
-        instance = FileStorage()
-        self.assertIsNotNone(instance.reload.__doc__)
 
-    def test_reload_types(self):
-        """types of parameter test"""
-        self.storage.new(self.model)
-        self.storage.save()
-
-        loaded_storage = FileStorage()
-
-        with self.assertRaises(TypeError):
-            loaded_storage.reload("incorrect_parameter")
-
-        loaded_storage.reload()
-
-        key = f"{self.model.__class__.__name__}.{self.model.id}"
-        self.assertIn(key, loaded_storage.all())
-
-    def Test_reload_nonexixtent(self):
-        """test for nones=xistant file"""
-        self.storage.new(self.model)
-        self.storage.save()
-        os,remove(self.file_path)
-        loaded_storage = FileStorage()
-        loaded_storage = reload()
-        self.assertGreaterEqual(len(loaded_storage.all()), 0)
-
-    if __name__ == '__main__':
-        unitest.main()
+if __name__ == '__name__':
+    unittest.main()

@@ -7,7 +7,7 @@ Simple clone of AirBnB
 - For Interactive mode, in the projects Root dir type './console.py'
 - For Non-Interactive mode use following syntax: ' echo "COMMAND" | ./console.py
 
-##commands
+## commands
 - help: show list of documented commands.
 - all: list all Instances of all classes.
 - create: creates Instance of a Class.

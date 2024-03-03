@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from datetime import datetime
+from models.engine import __init__
 import uuid
 import models
 
@@ -13,20 +14,15 @@ class BaseModel:
         """
         if kwargs:
             for key, value in kwargs.items():
-                if key != '__class__':
-                    if key in ('created_at', 'updated_at'):
-                        setattr(self, key, datetime.strptime(
-                            value, '%Y-%m-%dT%H:%M:%S.%f'))
-                    else:
-                        setattr(self, key, value)
-            if 'created_at' not in kwargs:
-                self.created_at = datetime.now()
-            if 'updated_at' not in kwargs:
-                self.updated_at = datetime.now()
+                if key != "__class__":
+                    setattr(self, key, value)
+            s = '%Y-%m-%dT%H:%M:%S.%f'
+            self.created_at = datetime.strptime(self.created_at, s)
+            self.updated_at = datetime.strptime(self.updated_at, s)
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
-            self.updated_at = datetime.now()
+            self.updated_at = self.created_at
             models.storage.new(self)
 
     def __str__(self):
@@ -34,7 +30,7 @@ class BaseModel:
         Returns a string representation of a BaseModel
         instance.
         """
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        return f"[{type(self).__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
         """

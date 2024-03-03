@@ -22,7 +22,7 @@ class FileStorage:
     """
 
     __file_path = 'file.json'
-    __objects = {} #type: dict
+    __objects = {}
 
     def all(self):
         """

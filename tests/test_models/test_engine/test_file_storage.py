@@ -88,19 +88,56 @@ class FileStorageTests(unittest.TestCase):
             """Set up test environment"""
             self.storage = FileStorage()
 
-    def test_arguments(self):
-        """test with args"""
-        test_inst = FileStorage()
-        with self.assertRaises(TypeError):
-            test_inst.save("Ramyun best")
+        def test_arguments(self):
+            """test with args"""
+            test_inst = FileStorage()
+            with self.assertRaises(TypeError):
+                test_inst.save("Ramyun best")
 
-    def test_reload(self):
+    class test_reload(unittest.TestCase):
         """
         Method for testing functionality of the reload() method
         of the FileStorage class.
         """
-        pass
+        def test_reload_correcly(self):
+            storage = FileStorage()
+            obj = BaseModel()
+            storage.new(obj)
+            storage.save()
+            storage.reload()
+            key = f"BaseModel.{obj.id}"
+            self.assertIn(key, storage.all())
+    class TestFileStorage(unittest.TestCase):
+        """tests for FileStorage"""
+        def setup(self):
+            """setup env"""
+            self.storage = FileStorage()
+
+        def testf_path(self):
+            """tests filepath attr"""
+            storage = FileStorage()
+            self.assertTrue(hasattr(sorage, "_FileStorage__file_path"))
+            self.assertIsInstance(storage._FileStorage__file_path, str)
+            self.assertEqual(storage._FileStorage__file_path, "file.json")
 
 
+        def test_initial_objects(self):
+            """Test initial value of __objects"""
+            self.assertEqual(self.storage._FileStorage__objects, {})
+
+        def test_add_object(self):
+            """Test adding object to __objects"""
+            obj = BaseModel()
+            self.storage.new(obj)
+            self.assertIn(f"BaseModel.{obj.id}", self.storage._FileStorage__objects)
+
+        def test_remove_object(self):
+            """Test removing object from __objects"""
+            obj = BaseModel()
+            self.storage.new(obj)
+            self.storage.save()
+            self.storage.reload()
+            self.storage.delete(obj)
+            self.assertNotIn(f"BaseModel.{obj.id}", self.storage._FileStorage__objects)
 if __name__ == '__name__':
     unittest.main()

@@ -110,7 +110,6 @@ class FileStorageTests(unittest.TestCase):
             key = f"BaseModel.{obj.id}"
             self.assertIn(key, storage.all())
 
-    class TestFileStorage(unittest.TestCase):
         def setUp(self):
             """Set up test environment"""
             self.storage = FileStorage()

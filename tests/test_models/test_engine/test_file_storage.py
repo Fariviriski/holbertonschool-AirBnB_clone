@@ -40,6 +40,7 @@ class FileStorageTests(unittest.TestCase):
         self.assertIsNotNone(self.fs1._FileStorage__objects)
         self.assertIsInstance(self.fs1._FileStorage__objects, dict)
 
+
     def test_no_argument(self):
         """test with no arguments passed"""
         test_inst = FileStorage()
@@ -49,7 +50,7 @@ class FileStorageTests(unittest.TestCase):
         """test with arguments passed"""
         test_inst = FileStorage()
         with self.assertRaises(TypeError):
-            test_inst .all("Top Ramen Nissin")
+            test_inst.all("Top Ramen Nissin")
 
     def test_all(self):
         """
@@ -62,19 +63,36 @@ class FileStorageTests(unittest.TestCase):
         key = f'BaseModel.{self.bm1.id}'
         self.assertIsNotNone(self.fs1.all(), {key: self.bm1})
 
-    def test_new(self):
+    class test_new(unittest.TestCase):
         """
         Method for testing functionality of the new() method
         of the FileStorage class.
         """
-        pass
+        def test_no_argument(self):
+            """test with no args"""
+            test_inst = FileStorage()
+            self.assertEqual(test_inst.all(), FileStorage._FileStorage__objects)
 
-    def test_save(self):
+        def test_args(self):
+            """testing with args"""
+            test_inst = FileStorage()
+            with self.assertRaises(TypeError):
+                test_inst.all("Maruchan Top Ramen")
+
+    class test_save(unittest.TestCase):
         """
         Method for testing functionality of the save() method
         of the FileStorage class.
         """
-        pass
+        def setUp(self):
+            """Set up test environment"""
+            self.storage = FileStorage()
+
+    def test_arguments(self):
+        """test with args"""
+        test_inst = FileStorage()
+        with self.assertRaises(TypeError):
+            test_inst.save("Ramyun best")
 
     def test_reload(self):
         """

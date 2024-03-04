@@ -40,6 +40,17 @@ class FileStorageTests(unittest.TestCase):
         self.assertIsNotNone(self.fs1._FileStorage__objects)
         self.assertIsInstance(self.fs1._FileStorage__objects, dict)
 
+    def test_no_argument(self):
+        """test with no arguments passed"""
+        test_inst = FileStorage()
+        self.assertEqual(test_inst.all(), FileStorage._FileStorage__objects)
+
+    def test_with_argument(self):
+        """test with arguments passed"""
+        test_inst = FileStorage()
+        with self.assertRaises(TypeError):
+            test_inst .all("Top Ramen Nissin")
+
     def test_all(self):
         """
         Method for testing functionality of the all() method

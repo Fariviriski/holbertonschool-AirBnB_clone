@@ -19,6 +19,7 @@ class FileStorageTests(unittest.TestCase):
         cls.fs1 = FileStorage()
         cls.fs2 = FileStorage()
         cls.bm1 = BaseModel()
+        storage = FileStorage()
 
     def tearDown(cls):
         """
@@ -62,6 +63,7 @@ class FileStorageTests(unittest.TestCase):
         self.fs1.new(self.bm1)
         key = f'BaseModel.{self.bm1.id}'
         self.assertIsNotNone(self.fs1.all(), {key: self.bm1})
+
 
     class test_new(unittest.TestCase):
         """
@@ -107,6 +109,37 @@ class FileStorageTests(unittest.TestCase):
             storage.reload()
             key = f"BaseModel.{obj.id}"
             self.assertIn(key, storage.all())
+
+    class TestFileStorage(unittest.TestCase):
+        def setUp(self):
+            """Set up test environment"""
+            self.storage = FileStorage()
+
+        def test_file_path(self):
+            """Test __file_path attribute"""
+            storage = FileStorage()
+            self.assertTrue(hasattr(storage, "_FileStorage__file_path"))
+            self.assertIsInstance(storage._FileStorage__file_path, str)
+            self.assertEqual(storage._FileStorage__file_path, "file.json")
+
+        def test_initial_objects(self):
+            """Test initial value of __objects"""
+            self.assertEqual(self.storage._FileStorage__objects, {})
+
+        def test_add_object(self):
+            """Test adding object to __objects"""
+            obj = BaseModel()
+            self.elf.storage.new(obj)
+            self.assertIn(f"BaseModel.{obj.id}", self.storage._FileStorage__objects)
+
+        def test_remove_object(self):
+            """Test removing object from __objects"""
+            obj = BaseModel()
+            self.storage.new(obj)
+            self.storage.save()
+            self.storage.reload()
+            self.storage.delete(obj)
+            self.assertNotIn(f"BaseModel.{obj.id}", self.storage._FileStorage__objects)
 
 if __name__ == '__name__':
     unittest.main()
